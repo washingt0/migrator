@@ -9,13 +9,16 @@ import (
 
 var conf *Config
 
+// Config holds all needed data to perform migration
 type Config struct {
-	SourceURI      string   `json:"source_uri"`
-	DestinationURI string   `json:"destination_uri"`
-	Tables         []string `json:"tables"`
-	RecordLimit    int      `json:"record_limit"`
+	SourceURI       string   `json:"source_uri"`
+	DestinationURI  string   `json:"destination_uri"`
+	DestinationFile string   `json:"destination_file"`
+	Tables          []string `json:"tables"`
+	RecordLimit     int      `json:"record_limit"`
 }
 
+// LoadConfig read and parse configuration file
 func LoadConfig() {
 	path := "config.json"
 
@@ -50,9 +53,10 @@ func LoadConfig() {
 	conf = cfg
 }
 
-func GetConfig() *Config {
+// GetConfig returns a copy of loaded config
+func GetConfig() Config {
 	if conf == nil {
 		log.Fatal("Settings not loaded")
 	}
-	return conf
+	return *conf
 }

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"migrator/config"
 
+	// driver used to connect with postgres
 	_ "github.com/lib/pq"
 )
 
@@ -20,9 +21,11 @@ func Connect() (err error) {
 		return
 	}
 
-	dstDB, err = sql.Open("postgres", cfg.DestinationURI)
-	if err != nil {
-		return
+	if cfg.DestinationURI != "" {
+		dstDB, err = sql.Open("postgres", cfg.DestinationURI)
+		if err != nil {
+			return
+		}
 	}
 
 	return

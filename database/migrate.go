@@ -5,16 +5,18 @@ import (
 	"errors"
 	"log"
 	"migrator/config"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
-func Migrate(tables *Tables) (err error) {
+// Migrate perform the data migration
+func Migrate(tables *Tables, outFile *os.File) (err error) {
 	cfg := config.GetConfig()
 	limit := 15
 
-	if srcDB == nil || dstDB == nil {
+	if srcDB == nil || (dstDB == nil && outFile == nil) {
 		err = errors.New("Database is not connected")
 	}
 

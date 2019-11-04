@@ -8,18 +8,21 @@ import (
 	"strings"
 )
 
+// Table represents a table in the database
 type Table struct {
 	Schema   string
 	Name     string
 	Priority int
 }
 
+// Tables is a set of tables
 type Tables []*Table
 
 func (t Tables) Len() int           { return len(t) }
 func (t Tables) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }
 func (t Tables) Less(i, j int) bool { return t[i].Priority > t[j].Priority }
 
+// Analize check which data has to be migrated
 func Analize() (xs *Tables, err error) {
 	if dstDB == nil {
 		err = errors.New("Database not connect yet")
