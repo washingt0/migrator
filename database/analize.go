@@ -24,7 +24,7 @@ func (t Tables) Less(i, j int) bool { return t[i].Priority > t[j].Priority }
 
 // Analize check which data has to be migrated
 func Analize() (xs *Tables, err error) {
-	if dstDB == nil {
+	if srcDB == nil {
 		err = errors.New("Database not connect yet")
 		return
 	}
@@ -32,7 +32,7 @@ func Analize() (xs *Tables, err error) {
 	cfg := config.GetConfig()
 
 	xs = new(Tables)
-	*xs = make(Tables, 0)
+	*xs = make(Tables, 0, 150)
 
 	for _, v := range cfg.Tables {
 		if len(strings.Split(v, ".")) == 1 {
@@ -65,6 +65,7 @@ func analizeTableDepencies(t, s string, m *Tables, n int) (err error) {
 		if (*m)[i].Priority < n {
 			(*m)[i].Priority = n
 		}
+		return
 	}
 
 	(*m) = append(*m, table)
@@ -76,7 +77,7 @@ func analizeTableDepencies(t, s string, m *Tables, n int) (err error) {
 		FROM information_schema.table_constraints AS TC
 		INNER JOIN information_schema.key_column_usage AS KCU ON TC.constraint_name = KCU.constraint_name AND TC.table_schema = KCU.table_schema
 		INNER JOIN information_schema.constraint_column_usage AS CCU ON CCU.constraint_name = TC.constraint_name AND CCU.table_schema = TC.table_schema
-		WHERE TC.constraint_type = 'FOREIGN KEY' AND TC.table_name=$1 AND TC.table_schema = $2;
+		WHERE TC.constraint_type = 'FOREIGN KEY' AND TC.table_name = $1 AND TC.table_schema = $2 ;
 	`, t, s)
 	if err != nil {
 		return

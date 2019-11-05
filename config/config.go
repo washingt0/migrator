@@ -42,7 +42,7 @@ func LoadConfig() {
 		log.Fatal("Source URI is not specified")
 	}
 
-	if cfg.DestinationURI == "" {
+	if cfg.DestinationURI == "" && cfg.DestinationFile == "" {
 		log.Fatal("Destination URI is not specified")
 	}
 
